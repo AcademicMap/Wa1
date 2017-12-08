@@ -50,7 +50,7 @@ textarea {
         position: relative;
         left: -28px;
         /* IE7-8 doesn't have border-radius, so don't indent the padding */
-        margin-bottom: 0;
+        margin-bottom: -60px;
         -webkit-border-radius: 3px;
         -moz-border-radius: 3px;
         border-radius: 3px;
