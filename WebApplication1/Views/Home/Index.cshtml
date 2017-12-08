@@ -2,22 +2,29 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="container">
+<div class="container" ng-controller="IndexController">
     <div class="row">
         
         <div id="custom-search-input">
-            <div class=>
-                
-            </div>
+          
             <div class="input-group col-md-8 search-box">
                 <h2>Academic Map</h2>
-                <input type="text" class="  search-query form-control" placeholder="Search" />
+                <input type="text" class="  search-query form-control" placeholder="Search" ng-model="name"/>
                 <span class="input-group-btn">
-                    <button class="btn btn-danger" type="button">
+                    <button class="btn btn-danger" type="button" ng-click="search(name)">
                         <span class=" glyphicon glyphicon-search"></span>
                     </button>
                 </span>
             </div>
         </div>
     </div>
+    
 </div>
+
+
+
+@section Scripts {
+
+    <script src="~/js/Home/index.controller.js"></script>,
+    <script src="~/js/DataService.js"></script>
+}
