@@ -18,7 +18,7 @@
 
             return $http({
                 method: 'POST',
-                url: '/CustomFormHandler.ashx?op=search',
+                url: '/DataHandler.ashx?op=search',
                 data: formData,
                 //transformRequest: angular.identity,
                 headers: {
