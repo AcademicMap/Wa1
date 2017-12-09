@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="AcademicPaperModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AcademicPaper">
+          <Key>
+            <PropertyRef Name="PaperId" />
+          </Key>
+          <Property Name="PaperId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Writer" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Link" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="PublishYear" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'AcademicPaper.dbo.Relation' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Relation">
+          <Key>
+            <PropertyRef Name="SourceId" />
+            <PropertyRef Name="RelatedId" />
+          </Key>
+          <Property Name="SourceId" Type="int" Nullable="false" />
+          <Property Name="RelatedId" Type="int" Nullable="false" />
+          <Property Name="Rate" Type="int" />
+        </EntityType>
+        <Association Name="FK_Relation_AcademicPaper">
+          <End Role="AcademicPaper" Type="Self.AcademicPaper" Multiplicity="1" />
+          <End Role="Relation" Type="Self.Relation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AcademicPaper">
+              <PropertyRef Name="PaperId" />
+            </Principal>
+            <Dependent Role="Relation">
+              <PropertyRef Name="SourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AcademicPaperModelStoreContainer">
+          <EntitySet Name="AcademicPaper" EntityType="Self.AcademicPaper" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Relation" EntityType="Self.Relation" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Relation].[SourceId] AS [SourceId], 
+    [Relation].[RelatedId] AS [RelatedId], 
+    [Relation].[Rate] AS [Rate]
+    FROM [dbo].[Relation] AS [Relation]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Relation_AcademicPaper" Association="Self.FK_Relation_AcademicPaper">
+            <End Role="AcademicPaper" EntitySet="AcademicPaper" />
+            <End Role="Relation" EntitySet="Relation" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="AcademicPaperModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AcademicPaper">
+          <Key>
+            <PropertyRef Name="PaperId" />
+          </Key>
+          <Property Name="PaperId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Writer" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Link" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PublishYear" Type="Int32" />
+          <NavigationProperty Name="Relation" Relationship="Self.FK_Relation_AcademicPaper" FromRole="AcademicPaper" ToRole="Relation" />
+        </EntityType>
+        <EntityType Name="Relation">
+          <Key>
+            <PropertyRef Name="SourceId" />
+            <PropertyRef Name="RelatedId" />
+          </Key>
+          <Property Name="SourceId" Type="Int32" Nullable="false" />
+          <Property Name="RelatedId" Type="Int32" Nullable="false" />
+          <Property Name="Rate" Type="Int32" />
+          <NavigationProperty Name="AcademicPaper" Relationship="Self.FK_Relation_AcademicPaper" FromRole="Relation" ToRole="AcademicPaper" />
+        </EntityType>
+        <Association Name="FK_Relation_AcademicPaper">
+          <End Role="AcademicPaper" Type="Self.AcademicPaper" Multiplicity="1" />
+          <End Role="Relation" Type="Self.Relation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AcademicPaper">
+              <PropertyRef Name="PaperId" />
+            </Principal>
+            <Dependent Role="Relation">
+              <PropertyRef Name="SourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AcademicPaperEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AcademicPaper" EntityType="Self.AcademicPaper" />
+          <EntitySet Name="Relation" EntityType="Self.Relation" />
+          <AssociationSet Name="FK_Relation_AcademicPaper" Association="Self.FK_Relation_AcademicPaper">
+            <End Role="AcademicPaper" EntitySet="AcademicPaper" />
+            <End Role="Relation" EntitySet="Relation" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="AcademicPaperModelStoreContainer" CdmEntityContainer="AcademicPaperEntities">
+          <EntitySetMapping Name="AcademicPaper">
+            <EntityTypeMapping TypeName="AcademicPaperModel.AcademicPaper">
+              <MappingFragment StoreEntitySet="AcademicPaper">
+                <ScalarProperty Name="PaperId" ColumnName="PaperId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Writer" ColumnName="Writer" />
+                <ScalarProperty Name="Link" ColumnName="Link" />
+                <ScalarProperty Name="PublishYear" ColumnName="PublishYear" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Relation">
+            <EntityTypeMapping TypeName="AcademicPaperModel.Relation">
+              <MappingFragment StoreEntitySet="Relation">
+                <ScalarProperty Name="SourceId" ColumnName="SourceId" />
+                <ScalarProperty Name="RelatedId" ColumnName="RelatedId" />
+                <ScalarProperty Name="Rate" ColumnName="Rate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
