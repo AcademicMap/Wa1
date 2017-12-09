@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using Newtonsoft.Json;
 
 namespace WebApplication1
@@ -34,7 +35,22 @@ namespace WebApplication1
         {
             AcademicPaper paper = db.AcademicPaper.FirstOrDefault(m => m.Name == str);
 
+            
+
+            if(paper == null)
+            {
+                return "Err";
+            }
+
             IEnumerable<Relation> rels = db.Relation.ToList().Where(m => m.SourceId == paper.PaperId);
+            //try
+            //{
+            //    rels = db.Relation.ToList().Where(m => m.SourceId == paper.PaperId);
+            //}
+            //catch
+            //{
+            //    return "Err";
+            //}
 
             AjaxResponseModel response = new AjaxResponseModel(rels);
             return JsonConvert.SerializeObject(response);

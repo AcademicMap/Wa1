@@ -9,6 +9,7 @@
 
     function DataService($http) {
 
+        var searchResults = {};
 
         var sendSearch = function (input)
         {
@@ -29,11 +30,18 @@
             }).then(function (response) {
                 console.log('Search successful!');
                 console.log(response)
-                return response.data;
+                if (response.data == "Err")
+                {
+                    return false;
+                }
+                return true;
             }, function (response) {
                 console.log("Search failed!");
+                return false;
             });
         }
+
+
         return {
             search: function (input) {
                 return sendSearch(input);

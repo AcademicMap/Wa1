@@ -1,0 +1,113 @@
+﻿@{
+    ViewBag.Title = "Result";
+}
+
+
+
+<div ng-controller="ResultController">
+    <form>
+
+        <div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{{title}}</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Tanımlanan İçerikler
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <tr>
+                                <th>
+                                    <label>Menu</label>
+                                </th>
+                                <th>
+                                    <label>Menü url id</label>
+                                </th>
+                                <th>
+                                    <label>Yardım mı?</label>
+                                </th>
+                                <th>
+                                    <label>Tab mı?</label>
+                                </th>
+                                <th>
+                                    <label>Başlık </label>
+                                </th>
+                                <th>
+                                    <label>Sıra no</label>
+                                </th>
+                                <th>
+                                    <label>Hits</label>
+                                </th>
+                                <th>
+                                    <label>Yüklenme tarihi</label>
+                                </th>
+                                <th colspan="2">Durumu</th>
+                                <th></th>
+                            </tr>
+
+
+
+                            <tr ng-repeat="content in contents">
+                                <td>
+                                    {{content.cntMnuName}}
+                                </td>
+                                <td>
+                                    {{content.cntViewId}}
+                                </td>
+                                <td>
+                                    <input type="checkbox" ng-checked="content.cntIsHelp" disabled />
+                                </td>
+                                <td>
+                                    <input type="checkbox" ng-checked="content.cntIsTab" disabled />
+                                </td>
+                                <td>
+                                    {{content.cntTitle}}
+                                </td>
+                                <td>
+                                    {{content.cntOrderNo}}
+                                </td>
+                                <td>
+                                    {{content.cntHits}}
+                                </td>
+                                <td>
+                                    {{content.cntInsertDate | date }}
+                                </td>
+                                <td>
+                                <td>
+
+                                    <input type="submit" class="btn btn-success btn-xs" ng-show="content.cntStatus" ng-click="updateStatus(content)" value="Aktif" />
+
+                                    <input type="submit" class="btn btn-danger btn-xs" ng-hide="content.cntStatus" ng-click="updateStatus(content)" value="Pasif" />
+
+                                </td>
+                                <td>
+                                    <input type="button" class="btn btn-outline btn-warning btn-xs"
+                                           ng-click="toUpdate(content.cntId)"
+                                           value="Değiştir" />
+                                    <input type="button" class="btn btn-outline btn-warning btn-xs"
+                                           ng-click="toDelete(content.cntId)"
+                                           value="Sil" />
+                                </td>
+                            </tr>
+
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<@section Scripts {
+
+    <script src="~/js/Home/result.controller.js"></script>
+    <script src="~/js/dataService.js"></script>
+}

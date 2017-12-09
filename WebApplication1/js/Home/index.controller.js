@@ -5,22 +5,32 @@
         .module('app')
         .controller('IndexController', IndexController);
 
-    IndexController.$inject = ['$location','$scope','DataService']; 
+    IndexController.$inject = ['$location','$scope','DataService','$window']; 
 
-    function IndexController($location,$scope, DataService) {
+    function IndexController($location,$scope, DataService, $window) {
         /* jshint validthis:true */
         $scope.title = 'controller';
 
         $scope.name = "";
 
-        $scope.item = {};
+        $scope.isResult;
 
         $scope.search = function(input){
             DataService.search(input).then(function (response) {
-                console.log(response.Value);
-                $scope.item = response.Value;
+                console.log(response);
+                $scope.isResult = response;
+                if ($scope.isResult == true) {
+                    $scope.toGraph();
+                }
             })
 
+            
+
+        }
+
+
+        $scope.toGraph = function () {
+            $window.location.href = "http://" + $window.location.host + "/Home/Result";
         }
 
         activate();
