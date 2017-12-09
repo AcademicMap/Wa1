@@ -14,7 +14,7 @@ namespace WebApplication1
     {
         string opr = string.Empty;
 
-        AcademicPaperEntities db = new AcademicPaperEntities();
+        MapModel db = new MapModel();
 
         public void ProcessRequest(HttpContext context)
         {
