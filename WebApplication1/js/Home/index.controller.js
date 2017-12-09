@@ -13,8 +13,14 @@
 
         $scope.name = "";
 
+        $scope.item = {};
+
         $scope.search = function(input){
-            DataService.search(input);
+            DataService.search(input).then(function (response) {
+                console.log(response.Value);
+                $scope.item = response.Value;
+            })
+
         }
 
         activate();

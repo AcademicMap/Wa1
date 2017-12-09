@@ -17,7 +17,5 @@ namespace WebApplication1
         public int SourceId { get; set; }
         public int RelatedId { get; set; }
         public Nullable<int> Rate { get; set; }
-    
-        public virtual AcademicPaper AcademicPaper { get; set; }
     }
 }

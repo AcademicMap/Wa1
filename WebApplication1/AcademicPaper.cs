@@ -14,19 +14,10 @@ namespace WebApplication1
     
     public partial class AcademicPaper
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public AcademicPaper()
-        {
-            this.Relation = new HashSet<Relation>();
-        }
-    
         public int PaperId { get; set; }
         public string Name { get; set; }
         public string Writer { get; set; }
         public string Link { get; set; }
         public Nullable<int> PublishYear { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Relation> Relation { get; set; }
     }
 }

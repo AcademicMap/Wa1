@@ -66,7 +66,6 @@ warning 6002: The table/view 'AcademicPaper.dbo.Relation' does not have a primar
           <Property Name="Writer" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Link" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="PublishYear" Type="Int32" />
-          <NavigationProperty Name="Relation" Relationship="Self.FK_Relation_AcademicPaper" FromRole="AcademicPaper" ToRole="Relation" />
         </EntityType>
         <EntityType Name="Relation">
           <Key>
@@ -76,7 +75,6 @@ warning 6002: The table/view 'AcademicPaper.dbo.Relation' does not have a primar
           <Property Name="SourceId" Type="Int32" Nullable="false" />
           <Property Name="RelatedId" Type="Int32" Nullable="false" />
           <Property Name="Rate" Type="Int32" />
-          <NavigationProperty Name="AcademicPaper" Relationship="Self.FK_Relation_AcademicPaper" FromRole="Relation" ToRole="AcademicPaper" />
         </EntityType>
         <Association Name="FK_Relation_AcademicPaper">
           <End Role="AcademicPaper" Type="Self.AcademicPaper" Multiplicity="1" />
