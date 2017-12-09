@@ -13,7 +13,7 @@
 
         $scope.name = "";
 
-        $scope.isResult;
+        $scope.isResult = true;
 
         $scope.search = function(input){
             DataService.search(input).then(function (response) {
