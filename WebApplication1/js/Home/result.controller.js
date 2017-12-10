@@ -10,11 +10,21 @@
     function ResultController($location,$scope,DataService,$window) {
         
         $scope.title = 'Results';
+        $scope.params = location.pathname.split("/").pop();
+        $scope.rel = {};
 
+        $scope.getResults = function (params) {
+
+        }
 
 
         activate();
 
-        function activate() { }
+        function activate()
+        {
+            DataService.search($scope.params).then(function (response) {
+                $scope.rel = response.Value;
+            });
+        }
     }
 })();

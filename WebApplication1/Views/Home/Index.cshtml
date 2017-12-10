@@ -10,9 +10,9 @@
             <div class="input-group col-md-8 search-box">
                 <h1 style="text-align: center;font-family:'Times New Roman'">Academic Map</h1>
                 <input type="text" class="search-query form-control" placeholder="Search" ng-model="name"/>
-                <p ng-hide="isResult">Academic Paper is not found</p>
+                <p ng-hide="isResult !== 'Err'">Academic Paper is not found</p>
                 <span class="input-group-btn">
-                    <button class="btn btn-danger" ng-class="{'bottomfalse': isResult === false,'bottomtrue': isResult === true }" type="button" ng-click="search(name)">
+                    <button class="btn btn-danger" ng-class="{'bottomfalse': isResult === 'Err','bottomtrue': isResult !== 'Err' }" type="button" ng-click="search(name)">
                         <span class=" glyphicon glyphicon-search"></span>
                     </button>
                     

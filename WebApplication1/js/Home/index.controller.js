@@ -13,14 +13,15 @@
 
         $scope.name = "";
 
-        $scope.isResult = true;
+        $scope.isResult = " ";
 
         $scope.search = function(input){
             DataService.search(input).then(function (response) {
                 console.log(response);
                 $scope.isResult = response;
-                if ($scope.isResult == true) {
-                    $scope.toGraph();
+                if ($scope.isResult !== "Err") {
+                    $scope.toGraph(input);
+                    
                 }
             })
 
@@ -29,8 +30,8 @@
         }
 
 
-        $scope.toGraph = function () {
-            $window.location.href = "http://" + $window.location.host + "/Home/Result";
+        $scope.toGraph = function (input) {
+            $window.location.href = "http://" + $window.location.host + "/Home/Result/" + input;
         }
 
         activate();

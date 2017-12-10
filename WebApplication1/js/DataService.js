@@ -8,8 +8,22 @@
     DataService.$inject = ['$http'];
 
     function DataService($http) {
+        
+        var result = {};
 
-        var searchResults = {};
+        result.list = [];
+
+
+        result.add = function (input) {
+            result.list.push({ data: input });
+        }
+        
+        var func = function()
+        {
+            console.log(result);
+            return result;
+        }
+        
 
         var sendSearch = function (input)
         {
@@ -29,15 +43,10 @@
 
             }).then(function (response) {
                 console.log('Search successful!');
-                console.log(response)
-                if (response.data == "Err")
-                {
-                    return false;
-                }
-                return true;
+                console.log(response);
+                return response.data;
             }, function (response) {
                 console.log("Search failed!");
-                return false;
             });
         }
 
@@ -45,10 +54,14 @@
         return {
             search: function (input) {
                 return sendSearch(input);
-            }
+            },
+            res: function () {
+                return func();
+            },
         };
 
         
     }
+    
 
 })();
