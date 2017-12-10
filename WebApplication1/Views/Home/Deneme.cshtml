@@ -4,7 +4,7 @@
 }
 
 <!DOCTYPE html>
-<html ng-app="minimal">
+<html ng-app="app">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Minimal GoJS Sample with AngularJS</title>
@@ -12,11 +12,13 @@
     <!-- Copyright 1998-2017 by Northwoods Software Corporation. -->
     <meta charset="UTF-8">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/1.8.4/go-debug.js"></script>
-   
+    
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.2/angular.min.js"></script>
+    <script src="~/js/app.js"></script>
+    <script src="~/js/DataService.js"></script>
     <script id="code">
-      angular.module('minimal', [])
-        .directive('goDiagram', function() {
+        angular.module('app')
+            .directive('goDiagram', function () {
           return {
             restrict: 'E',
             template: '<div></div>',  // just an empty DIV element
@@ -94,35 +96,44 @@
               });
             }
           };
-        })
-        .controller('MinimalCtrl', function($scope) {
-          $scope.model = new go.GraphLinksModel(
-            [
-              { key: 1, name: "Alpha", color: "lightblue" },
-              { key: 2, name: "Beta", color: "orange" },
-              { key: 3, name: "Gamma", color: "lightgreen" },
-              { key: 4, name: "Delta", color: "pink" }
-            ],
-            [
-              { from: 1, to: 2 },
-              { from: 1, to: 3 },
-              { from: 2, to: 2 },
-              { from: 3, to: 4 },
-              { from: 4, to: 1 }
-            ]);
-          $scope.model.selectedNodeData = null;
-          $scope.replaceModel = function() {
-            $scope.model = new go.GraphLinksModel(
-                [
-                  { key: 11, name: "zeta", color: "red" },
-                  { key: 12, name: "eta", color: "green" }
-                ],
-                [
-                  { from: 11, to: 12 }
-                ]
-              );
-          }
-        });
+            })
+            .controller('MinimalCtrl', ['$scope', 'DataService', function ($scope, DataService) {
+                $scope.model = new go.GraphLinksModel(
+                    [
+                        { key: 1, name: "Alpha", color: "lightblue" },
+                        { key: 2, name: "Beta", color: "orange" },
+                        { key: 3, name: "Gamma", color: "lightgreen" },
+                        { key: 4, name: "Delta", color: "pink" }
+                    ],
+                    [
+                        { from: 1, to: 2 },
+                        { from: 1, to: 3 },
+                        { from: 2, to: 2 },
+                        { from: 3, to: 4 },
+                        { from: 4, to: 1 }
+                    ]);
+
+                $scope.model.selectedNodeData = null;
+                $scope.replaceModel = function () {
+                    $scope.model = new go.GraphLinksModel(
+                        [
+                            { key: 11, name: "zeta", color: "red" },
+                            { key: 12, name: "eta", color: "green" }
+                        ],
+                        [
+                            { from: 11, to: 12 }
+                        ]
+                        );
+                }
+
+                init();
+
+                function init()
+                {
+
+                }
+
+            }]);
     </script>
 </head>
 <body ng-controller="MinimalCtrl">

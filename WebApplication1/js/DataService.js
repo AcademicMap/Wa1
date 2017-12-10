@@ -9,22 +9,6 @@
 
     function DataService($http) {
         
-        var result = {};
-
-        result.list = [];
-
-
-        result.add = function (input) {
-            result.list.push({ data: input });
-        }
-        
-        var func = function()
-        {
-            console.log(result);
-            return result;
-        }
-        
-
         var sendSearch = function (input)
         {
             var formData = new FormData();
@@ -50,6 +34,14 @@
             });
         }
 
+        var getPaperList = function () {
+
+            return $http.get('/DataHandler.ashx?opr=GetPaperList').then(function (response) {
+                return response.data;
+            }, function (response) {
+                console.log('Paper list failed!');
+            })
+        }
 
         return {
             search: function (input) {

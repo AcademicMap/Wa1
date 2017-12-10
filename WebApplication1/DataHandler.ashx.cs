@@ -27,8 +27,19 @@ namespace WebApplication1
                 case "search":
                     context.Response.Write(Search(context.Request.Params["Name"]));
                     break;
-                
+                case "getpaperlist":
+                    context.Response.Write(GetPapers());
+                    break;
             }
+        }
+
+        public string GetPapers()
+        {
+            IEnumerable<AcademicPaper> papers = db.AcademicPaper.ToList();
+
+            AjaxResponseModel response = new AjaxResponseModel(papers);
+
+            return JsonConvert.SerializeObject(response);
         }
 
         public string Search(string str)
