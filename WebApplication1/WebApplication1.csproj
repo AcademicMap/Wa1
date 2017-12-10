@@ -239,6 +239,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="js\app.js" />
     <Content Include="js\DataService.js" />
+    <Content Include="js\fdiagram.js" />
     <Content Include="js\Home\index.controller.js" />
     <Content Include="js\Home\result.controller.js" />
     <Content Include="Scripts\angular-animate.js" />

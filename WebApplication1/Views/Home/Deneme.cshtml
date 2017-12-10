@@ -4,160 +4,160 @@
 }
 
 <!DOCTYPE html>
-<html ng-app="app" ng-controller="ResultsController">
+<html ng-app="minimal">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Interactive Force Directed Layout</title>
-    <meta name="description" content="A continuously operating ForceDirectedLayout lets the user push and pull nodes around." />
+    <title>Minimal GoJS Sample with AngularJS</title>
+    <meta name="description" content="Interactive diagram implemented by GoJS using AngularJS, including a diagram directive and model binding." />
     <!-- Copyright 1998-2017 by Northwoods Software Corporation. -->
     <meta charset="UTF-8">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/1.8.4/go-debug.js"></script>
    
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.2/angular.min.js"></script>
     <script id="code">
-  // This variation on ForceDirectedLayout does not move any selected Nodes
-  // but does move all other nodes (vertexes).
-  function ContinuousForceDirectedLayout() {
-    go.ForceDirectedLayout.call(this);
-    this._isObserving = false;
-  }
-  go.Diagram.inherit(ContinuousForceDirectedLayout, go.ForceDirectedLayout);
-  @*/** @override **/*@
-  ContinuousForceDirectedLayout.prototype.isFixed = function(v) {
-    return v.node.isSelected;
-  }
-  // optimization: reuse the ForceDirectedNetwork rather than re-create it each time
-  @*/** @override */*@
-  ContinuousForceDirectedLayout.prototype.doLayout = function(coll) {
-    if (!this._isObserving) {
-      this._isObserving = true;
-      // cacheing the network means we need to recreate it if nodes or links have been added or removed or relinked,
-      // so we need to track structural model changes to discard the saved network.
-      var lay = this;
-      this.diagram.addModelChangedListener(function (e) {
-        // modelChanges include a few cases that we don't actually care about, such as
-        // "nodeCategory" or "linkToPortId", but we'll go ahead and recreate the network anyway.
-        // Also clear the network when replacing the model.
-        if (e.modelChange !== "" ||
-            (e.change === go.ChangedEvent.Transaction && e.propertyName === "StartingFirstTransaction")) {
-          lay.network = null;
-        }
-      });
-    }
-    var net = this.network;
-    if (net === null) {  // the first time, just create the network as normal
-      this.network = net = this.makeNetwork(coll);
-    } else {  // but on reuse we need to update the LayoutVertex.bounds for selected nodes
-      this.diagram.nodes.each(function (n) {
-        var v = net.findVertex(n);
-        if (v !== null) v.bounds = n.actualBounds;
-      });
-    }
-    // now perform the normal layout
-    go.ForceDirectedLayout.prototype.doLayout.call(this, coll);
-    // doLayout normally discards the LayoutNetwork by setting Layout.network to null;
-    // here we remember it for next time
-    this.network = net;
-  }
-  // end ContinuousForceDirectedLayout
-  function init() {
-    if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
-    var $ = go.GraphObject.make;  // for conciseness in defining templates
-    myDiagram =
-      $(go.Diagram, "myDiagramDiv",  // must name or refer to the DIV HTML element
-        {
-          initialAutoScale: go.Diagram.Uniform,  // an initial automatic zoom-to-fit
-          contentAlignment: go.Spot.Center,  // align document to the center of the viewport
-          layout:
-            $(ContinuousForceDirectedLayout,  // automatically spread nodes apart while dragging
-              { defaultSpringLength: 30, defaultElectricalCharge: 100 }),
-          // do an extra layout at the end of a move
-          "SelectionMoved": function(e) { e.diagram.layout.invalidateLayout(); }
+      angular.module('minimal', [])
+        .directive('goDiagram', function() {
+          return {
+            restrict: 'E',
+            template: '<div></div>',  // just an empty DIV element
+            replace: true,
+            scope: { model: '=goModel' },
+            link: function(scope, element, attrs) {
+              if (window.goSamples) goSamples(); // init for these samples -- you don't need to call this
+              var $ = go.GraphObject.make;
+              var diagram =  // create a Diagram for the given HTML DIV element
+                $(go.Diagram, element[0],
+                  {
+                    nodeTemplate: $(go.Node, "Auto",
+                                    new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+                                    $(go.Shape, "RoundedRectangle", new go.Binding("fill", "color"),
+                                      {
+                                        portId: "", cursor: "pointer", strokeWidth: 0,
+                                        fromLinkable: true, toLinkable: true,
+                                        fromLinkableSelfNode: true, toLinkableSelfNode: true,
+                                        fromLinkableDuplicates: true, toLinkableDuplicates: true
+                                      }),
+                                    $(go.TextBlock, { margin: 8, editable: true },
+                                      new go.Binding("text", "name").makeTwoWay())
+                                  ),
+                    linkTemplate: $(go.Link,
+                                    { relinkableFrom: true, relinkableTo: true },
+                                    $(go.Shape),
+                                    $(go.Shape, { toArrow: "Standard", stroke: null, strokeWidth: 0 })
+                                  ),
+                    initialContentAlignment: go.Spot.Center,
+                    "ModelChanged": updateAngular,
+                    "ChangedSelection": updateSelection,
+                    "undoManager.isEnabled": true
+                  });
+              // whenever a GoJS transaction has finished modifying the model, update all Angular bindings
+              function updateAngular(e) {
+                if (e.isTransactionFinished) {
+                  scope.$apply();
+                }
+              }
+              // update the Angular model when the Diagram.selection changes
+              function updateSelection(e) {
+                diagram.model.selectedNodeData = null;
+                var it = diagram.selection.iterator;
+                while (it.next()) {
+                  var selnode = it.value;
+                  // ignore a selected link or a deleted node
+                  if (selnode instanceof go.Node && selnode.data !== null) {
+                    diagram.model.selectedNodeData = selnode.data;
+                    break;
+                  }
+                }
+                scope.$apply();
+              }
+              // notice when the value of "model" changes: update the Diagram.model
+              scope.$watch("model", function(newmodel) {
+                var oldmodel = diagram.model;
+                if (oldmodel !== newmodel) {
+                  diagram.removeDiagramListener("ChangedSelection", updateSelection);
+                  diagram.model = newmodel;
+                  diagram.addDiagramListener("ChangedSelection", updateSelection);
+                }
+              });
+              scope.$watch("model.selectedNodeData.name", function(newname) {
+                if (!diagram.model.selectedNodeData) return;
+                // disable recursive updates
+                diagram.removeModelChangedListener(updateAngular);
+                // change the name
+                diagram.startTransaction("change name");
+                // the data property has already been modified, so setDataProperty would have no effect
+                var node = diagram.findNodeForData(diagram.model.selectedNodeData);
+                if (node !== null) node.updateTargetBindings("name");
+                diagram.commitTransaction("change name");
+                // re-enable normal updates
+                diagram.addModelChangedListener(updateAngular);
+              });
+            }
+          };
+        })
+        .controller('MinimalCtrl', function($scope) {
+          $scope.model = new go.GraphLinksModel(
+            [
+              { key: 1, name: "Alpha", color: "lightblue" },
+              { key: 2, name: "Beta", color: "orange" },
+              { key: 3, name: "Gamma", color: "lightgreen" },
+              { key: 4, name: "Delta", color: "pink" }
+            ],
+            [
+              { from: 1, to: 2 },
+              { from: 1, to: 3 },
+              { from: 2, to: 2 },
+              { from: 3, to: 4 },
+              { from: 4, to: 1 }
+            ]);
+          $scope.model.selectedNodeData = null;
+          $scope.replaceModel = function() {
+            $scope.model = new go.GraphLinksModel(
+                [
+                  { key: 11, name: "zeta", color: "red" },
+                  { key: 12, name: "eta", color: "green" }
+                ],
+                [
+                  { from: 11, to: 12 }
+                ]
+              );
+          }
         });
-    // dragging a node invalidates the Diagram.layout, causing a layout during the drag
-    myDiagram.toolManager.draggingTool.doMouseMove = function() {
-      go.DraggingTool.prototype.doMouseMove.call(this);
-      if (this.isActive) { this.diagram.layout.invalidateLayout(); }
-    }
-    // define each Node's appearance
-    myDiagram.nodeTemplate =
-      $(go.Node, "Auto",  // the whole node panel
-        // define the node's outer shape, which will surround the TextBlock
-        $(go.Shape, "Circle",
-          { fill: "CornflowerBlue", stroke: "black", spot1: new go.Spot(0, 0, 5, 5), spot2: new go.Spot(1, 1, -5, -5) }),
-        $(go.TextBlock,
-          { font: "bold 10pt helvetica, bold arial, sans-serif", textAlign: "center", maxSize: new go.Size(100, NaN) },
-          new go.Binding("text", "text"))
-      );
-    // the rest of this app is the same as samples/conceptMap.html
-    // replace the default Link template in the linkTemplateMap
-    myDiagram.linkTemplate =
-      $(go.Link,  // the whole link panel
-        $(go.Shape,  // the link shape
-          { stroke: "black" }),
-        $(go.Shape,  // the arrowhead
-          { toArrow: "standard", stroke: null }),
-        $(go.Panel, "Auto",
-          $(go.Shape,  // the label background, which becomes transparent around the edges
-            { fill: $(go.Brush, "Radial", { 0: "rgb(240, 240, 240)", 0.3: "rgb(240, 240, 240)", 1: "rgba(240, 240, 240, 0)" }),
-              stroke: null }),
-          $(go.TextBlock,  // the label text
-            { textAlign: "center",
-              font: "10pt helvetica, arial, sans-serif",
-              stroke: "#555555",
-              margin: 4 },
-            new go.Binding("text", "text"))
-        )
-      );
-    // create the model for the concept map
-    var nodeDataArray = ;
-    var linkDataArray = [
-      { from: 1, to: 2, text: "represent" },
-      { from: 2, to: 3, text: "is" },
-      { from: 2, to: 4, text: "is" },
-      { from: 2, to: 5, text: "is" },
-      { from: 2, to: 6, text: "includes" },
-      { from: 2, to: 10, text: "necessary\nfor" },
-      { from: 2, to: 12, text: "necessary\nfor" },
-      { from: 4, to: 5, text: "combine\nto form" },
-      { from: 4, to: 6, text: "include" },
-      { from: 4, to: 7, text: "are" },
-      { from: 4, to: 8, text: "are" },
-      { from: 4, to: 9, text: "are" },
-      { from: 5, to: 9, text: "are" },
-      { from: 5, to: 11, text: "may be" },
-      { from: 7, to: 13, text: "in" },
-      { from: 7, to: 14, text: "in" },
-      { from: 7, to: 19, text: "begin\nwith" },
-      { from: 8, to: 15, text: "with" },
-      { from: 8, to: 16, text: "with" },
-      { from: 9, to: 17, text: "aids" },
-      { from: 11, to: 18, text: "show" },
-      { from: 12, to: 19, text: "begins\nwith" },
-      { from: 17, to: 18, text: "needed\nto see" },
-      { from: 18, to: 20, text: "between" }
-    ];
-    myDiagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-  }
-  function reload() {
-    //myDiagram.layout.network = null;
-    var text = myDiagram.model.toJson();
-    myDiagram.model = go.Model.fromJson(text);
-    //myDiagram.layout =
-    //  go.GraphObject.make(ContinuousForceDirectedLayout,  // automatically spread nodes apart while dragging
-    //    { defaultSpringLength: 30, defaultElectricalCharge: 100 });
-  }
     </script>
 </head>
-<body onload="init()">
+<body ng-controller="MinimalCtrl">
+    <!-- only needed for the goSamples framework -->
     <div id="sample">
-        <div id="myDiagramDiv" style="background-color: whitesmoke; border: solid 1px black; width: 100%; height: 700px"></div>
-        <p>
-            As you drag a node around, the custom <a>ForceDirectedLayout</a> operates continuously, causing other nodes to be pushed
-            aside or pulled along.
+        <!-- a go-diagram element referring to the model, originally written as: -->
+        <!-- &lt;go-diagram go-model="model" style="border: solid 1px blue; width:100%; height:400px"&gt;&lt;/go-diagram&gt; -->
+        <go-diagram go-model="model" style="border: solid 1px black; width:100%; height:400px"></go-diagram>
+        Number of node data: {{model.nodeDataArray.length}}
+        <br />
+        Alpha node location: {{model.findNodeDataForKey(1).loc}}
+        <br />
+        Selected node: {{model.selectedNodeData.key}}  <input type="text" ng-model="model.selectedNodeData.name"></input>
+        <br />
+        Number of link data: {{model.linkDataArray.length}}
+        <p class="box bg-info">
+            This is an AngularJS v1 sample.  For a minimal Angular project, see the <code>../projects/angular-basic/</code> subdirectory.
         </p>
         <p>
-            The graph is exactly the same as the <a href="conceptMap.html">Concept Map</a> sample.
-            But the node template is different, and the layout is different.
+            This defines an <a href="https://angularjs.org/">AngularJS</a> directive for creating a <b>GoJS</b> <a>Diagram</a> with certain properties.
+            It also sets up a controller holding a <a>GraphLinksModel</a> that is passed
+            to the <b>go-diagram</b> element via the <b>go-model</b> attribute.
+        </p>
+        <p>
+            Note that the above bindings are updated automatically as the user moves the "Alpha" node,
+            copies or deletes Parts in the Diagram, reconnects the Link from "Alpha" to "Beta", or performs an undo or redo.
+        </p>
+        <p>
+            You can also replace the <a>Diagram.model</a> just by setting the "model" property on the $scope,
+            since the "goDiagram" directive watches that property for changes.
+        </p>
+        <button ng-click="replaceModel()">Replace Model</button>
+        <p>
+            Please note that the source code shown here for the HTML shows the expanded DIV element produced by AngularJS and other modified elements,
+            not <code>&lt;go-diagram go-model="model" style=...&gt;&lt;/go-diagram&gt;</code> and &#123; &#123; &#125; &#125; bindings as originally written.
         </p>
     </div>
 </body>
