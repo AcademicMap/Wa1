@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "Result";
+}
+
+
+
+<div ng-controller="ResultController">
+    <div>
+        <ul>
+            <li ng-repeat="item in rel">Source ID:{{item.SourceId}}, RelatedID: {{item.RelatedId}} Rate:{{item.Rate}}</li>
+        </ul>
+    </div>
+    <p>{{rel}}</p>
+</div>
+
+@section Scripts {
+
+    <script src="~/js/Home/result.controller.js"></script>
+    <script src="~/js/dataService.js"></script>
+}
