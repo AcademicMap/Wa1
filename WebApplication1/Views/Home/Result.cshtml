@@ -6,11 +6,11 @@
 <!DOCTYPE html>
 <html ng-app="app">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Minimal GoJS Sample with AngularJS</title>
-    <meta name="description" content="Interactive diagram implemented by GoJS using AngularJS, including a diagram directive and model binding." />
-    <!-- Copyright 1998-2017 by Northwoods Software Corporation. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">    
     <meta charset="UTF-8">
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/1.8.4/go-debug.js"></script>
     
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.2/angular.min.js"></script>
@@ -101,16 +101,16 @@
                 $scope.model = new go.GraphLinksModel(
                     [
                        { key: 1, name: "Alpha", color: "lightblue" },
-          { key: 2, name: "Beta", color: "orange" },
-          { key: 3, name: "Gamma", color: "lightgreen" },
-          { key: 4, name: "Delta", color: "pink" }
+                       { key: 2, name: "Beta", color: "orange" },
+                       { key: 3, name: "Gamma", color: "lightgreen" },
+                       { key: 4, name: "Delta", color: "pink" }
                     ],
                     [
                           { from: 1, to: 2 },
-          { from: 1, to: 3 },
-          { from: 2, to: 2 },
-          { from: 3, to: 4 },
-          { from: 4, to: 1 }
+                          { from: 1, to: 3 },
+                          { from: 2, to: 2 },
+                          { from: 3, to: 4 },
+                          { from: 4, to: 1 }
                     ]);
 
                 $scope.model.selectedNodeData = null;
@@ -189,19 +189,20 @@
 <body ng-controller="MinimalCtrl">
     <!-- only needed for the goSamples framework -->
     <div id="sample">
-        <!-- a go-diagram element referring to the model, originally written as: -->
-        <!-- &lt;go-diagram go-model="model" style="border: solid 1px blue; width:100%; height:400px"&gt;&lt;/go-diagram&gt; -->
-        <go-diagram go-model="model" style="border: solid 1px black; width:100%; height:400px"></go-diagram>
-        Selected Paper Name:{{model.selectedNodeData.name}}
-        <br/>
-        Selected Paper Writer: {{model.selectedNodeData.writer}}
-        <br/>
-        Selected Paper Url: {{model.selectedNodeData.url}}
-        <br />
-        Selected Paper Publish Year: {{model.selectedNodeData.year}}
         
-        <p>{{papers}}</p>
-        <p>{{relLink}}</p>
+        <go-diagram class="graph" go-model="model" style="border: solid 1px black; width:50%; height:500px"></go-diagram>
+        <div class="graphinfo">
+            Selected Paper Name:{{model.selectedNodeData.name}}
+            <br />
+            Selected Paper Writer: {{model.selectedNodeData.writer}}
+            <br />
+            Selected Paper Url: {{model.selectedNodeData.url}}
+            <br />
+            Selected Paper Publish Year: {{model.selectedNodeData.year}}
+
+            <p>{{papers}}</p>
+            <p>{{relLink}}</p>
+        </div>
         
     </div>
 </body>
