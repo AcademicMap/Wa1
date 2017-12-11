@@ -45,7 +45,17 @@
                     linkTemplate: $(go.Link,
                                     { relinkableFrom: true, relinkableTo: true },
                                     $(go.Shape),
-                                    $(go.Shape, { toArrow: "Standard", stroke: null, strokeWidth: 0 })
+                                    $(go.Shape, { toArrow: "Standard", stroke: null, strokeWidth: 0 }),
+                                    $(go.Panel, "Auto",
+          $(go.Shape,  // the label background, which becomes transparent around the edges
+            { fill: $(go.Brush, "Radial", { 0: "rgb(240, 240, 240)", 0.3: "rgb(240, 240, 240)", 1: "rgba(240, 240, 240, 0)" }),
+                stroke: null }),
+          $(go.TextBlock,  // the label text
+            { textAlign: "center",
+                font: "10pt helvetica, arial, sans-serif",
+                stroke: "#555555",
+                margin: 4 },
+            new go.Binding("text", "rate")))
                                   ),
                     initialContentAlignment: go.Spot.Center,
                     "ModelChanged": updateAngular,
@@ -130,6 +140,7 @@
                         $scope.relLink.push({
                             from: obj[i].SourceId,
                             to: obj[i].RelatedId,
+                            rate: obj[i].Rate,
                         })
                     }
                 }
