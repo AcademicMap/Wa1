@@ -9,16 +9,19 @@ namespace WebApplication1
     [Table("Relation")]
     public partial class Relation
     {
-        [Key]
         [Column(Order = 0)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int SourceId { get; set; }
 
-        [Key]
         [Column(Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int RelatedId { get; set; }
 
         public int? Rate { get; set; }
+
+        [Key]
+        [Column(Order = 4)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int id { get; set; }
     }
 }

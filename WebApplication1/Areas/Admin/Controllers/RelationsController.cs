@@ -78,7 +78,7 @@ namespace WebApplication1.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SourceId,RelatedId,Rate")] Relation relation)
+        public ActionResult Edit([Bind(Include = "SourceId,RelatedId,Rate,id")] Relation relation)
         {
             if (ModelState.IsValid)
             {
