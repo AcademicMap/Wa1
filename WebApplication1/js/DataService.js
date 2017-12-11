@@ -36,7 +36,8 @@
 
         var getPaperList = function () {
 
-            return $http.get('/DataHandler.ashx?opr=GetPaperList').then(function (response) {
+            return $http.get('/DataHandler.ashx?opr=getpaperlist').then(function (response) {
+                
                 return response.data;
             }, function (response) {
                 console.log('Paper list failed!');
@@ -47,8 +48,8 @@
             search: function (input) {
                 return sendSearch(input);
             },
-            res: function () {
-                return func();
+            getPapers: function () {
+                return getPaperList();
             },
         };
 
