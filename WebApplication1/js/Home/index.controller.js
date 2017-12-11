@@ -12,7 +12,7 @@
         $scope.title = 'controller';
 
         $scope.name = "";
-
+        $scope.plist = {};
         $scope.isResult = " ";
 
         $scope.search = function(input){
@@ -36,6 +36,10 @@
 
         activate();
 
-        function activate() { }
+        function activate() {
+            DataService.getPapers().then(function (response) {
+                $scope.plist = response.Value;
+            })
+        }
     }
 })();

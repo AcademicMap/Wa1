@@ -9,7 +9,10 @@
           
             <div class="input-group col-md-8 search-box">
                 <h1 style="text-align: center;font-family:'Times New Roman'">Academic Map</h1>
-                <input type="text" class="search-query form-control" placeholder="Search" ng-model="name"/>
+                <input class="search-query form-control" placeholder="Search" ng-model="name" list="paperlist"/>
+                <datalist id="paperlist">
+                    <option ng-repeat="item in plist" value="{{item.Name}}"></option>
+                </datalist>
                 <p ng-hide="isResult !== 'Err'" style="font-size:200%;">Academic Paper is not found</p>
                 <span class="input-group-btn">
                     <button class="btn btn-danger" ng-class="{'bottomfalse': isResult === 'Err','bottomtrue': isResult !== 'Err' }" type="button" ng-click="search(name)">
@@ -19,7 +22,7 @@
                 </span>
                 
             </div>
-            
+            @*<p ng-repeat="item in plist">{{item.Name}}</p>*@
         </div>
     </div>
     
