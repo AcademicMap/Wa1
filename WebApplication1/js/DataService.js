@@ -44,6 +44,21 @@
             })
         }
 
+        var checkLogin = function (obj) {
+            console.log(obj);
+            console.log('Log Service!');
+            var response = $http({
+                method: 'POST',
+                url: '/Admin/Users/Login/User',
+                data: JSON.stringify(obj),
+                //transformRequest: angular.identity,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            return response;
+        }
+
         return {
             search: function (input) {
                 return sendSearch(input);
@@ -51,6 +66,10 @@
             getPapers: function () {
                 return getPaperList();
             },
+
+            login: function (obj) {
+                return checkLogin(obj);
+            }
         };
 
         

@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form ng-controller="LoginController" ng-submit="checkLogin(User)">
+
+
+
+
+
+    <fieldset>
+        <div class="form-group">
+
+            <input type="text" class="form-control" ng-model="User.userName" />
+
+        </div>
+        <div class="form-group">
+
+            <input type="text" class="form-control" ng-model="User.password" />
+
+        </div>
+        <input type="submit" id="button_log" value="Giriş Yap" class="btn btn-lg btn-default btn-block" />
+    </fieldset>
+
+
+</form> 
+
+@section Scripts {
+    <script src="~/Areas/Admin/js/Login/login.controller.js"></script>
+    <script src="~/js/DataService.js"></script>
+
+
+
+}
+

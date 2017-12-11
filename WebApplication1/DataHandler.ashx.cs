@@ -30,6 +30,7 @@ namespace WebApplication1
                 case "getpaperlist":
                     context.Response.Write(GetPapers());
                     break;
+                
             }
         }
 
