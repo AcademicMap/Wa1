@@ -4,6 +4,7 @@ namespace WebApplication1
     using System.Data.Entity;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
+    using Areas.Admin.Models;
 
     public partial class MapModel : DbContext
     {
@@ -18,6 +19,7 @@ namespace WebApplication1
 
         public virtual DbSet<AcademicPaper> AcademicPaper { get; set; }
         public virtual DbSet<Relation> Relation { get; set; }
+        public virtual DbSet<AdminList> AdminList { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

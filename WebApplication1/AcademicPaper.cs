@@ -10,7 +10,7 @@ namespace WebApplication1
     public partial class AcademicPaper
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PaperId { get; set; }
 
         [Required]
