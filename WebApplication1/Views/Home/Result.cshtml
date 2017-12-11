@@ -24,7 +24,52 @@
             template: '<div></div>',  // just an empty DIV element
             replace: true,
             scope: { model: '=goModel' },
-            link: function(scope, element, attrs) {
+            link: function (scope, element, attrs) {
+                //For implementing Layout
+                function ContinuousForceDirectedLayout() {
+                    go.ForceDirectedLayout.call(this);
+                    this._isObserving = false;
+                }
+                go.Diagram.inherit(ContinuousForceDirectedLayout, go.ForceDirectedLayout);
+
+                
+                ContinuousForceDirectedLayout.prototype.isFixed = function (v) {
+                    return v.node.isSelected;
+                }
+
+                // optimization: reuse the ForceDirectedNetwork rather than re-create it each time
+                
+                ContinuousForceDirectedLayout.prototype.doLayout = function (coll) {
+                    if (!this._isObserving) {
+                        this._isObserving = true;
+                        // cacheing the network means we need to recreate it if nodes or links have been added or removed or relinked,
+                        // so we need to track structural model changes to discard the saved network.
+                        var lay = this;
+                        this.diagram.addModelChangedListener(function (e) {
+                            // modelChanges include a few cases that we don't actually care about, such as
+                            // "nodeCategory" or "linkToPortId", but we'll go ahead and recreate the network anyway.
+                            // Also clear the network when replacing the model.
+                            if (e.modelChange !== "" ||
+                                (e.change === go.ChangedEvent.Transaction && e.propertyName === "StartingFirstTransaction")) {
+                                lay.network = null;
+                            }
+                        });
+                    }
+                    var net = this.network;
+                    if (net === null) {  // the first time, just create the network as normal
+                        this.network = net = this.makeNetwork(coll);
+                    } else {  // but on reuse we need to update the LayoutVertex.bounds for selected nodes
+                        this.diagram.nodes.each(function (n) {
+                            var v = net.findVertex(n);
+                            if (v !== null) v.bounds = n.actualBounds;
+                        });
+                    }
+                    // now perform the normal layout
+                    go.ForceDirectedLayout.prototype.doLayout.call(this, coll);
+                    // doLayout normally discards the LayoutNetwork by setting Layout.network to null;
+                    // here we remember it for next time
+                    this.network = net;
+                }
               // init for these samples -- you don't need to call this
               var $ = go.GraphObject.make;
               var diagram =  // create a Diagram for the given HTML DIV element
@@ -47,20 +92,22 @@
                                     $(go.Shape),
                                     $(go.Shape, { toArrow: "Standard", stroke: null, strokeWidth: 0 }),
                                     $(go.Panel, "Auto",
-          $(go.Shape,  // the label background, which becomes transparent around the edges
-            { fill: $(go.Brush, "Radial", { 0: "rgb(240, 240, 240)", 0.3: "rgb(240, 240, 240)", 1: "rgba(240, 240, 240, 0)" }),
-                stroke: null }),
-          $(go.TextBlock,  // the label text
-            { textAlign: "center",
-                font: "10pt helvetica, arial, sans-serif",
-                stroke: "#555555",
-                margin: 4 },
-            new go.Binding("text", "rate")))
+                                      $(go.Shape,  // the label background, which becomes transparent around the edges
+                                        { fill: $(go.Brush, "Radial", { 0: "rgb(240, 240, 240)", 0.3: "rgb(240, 240, 240)", 1: "rgba(240, 240, 240, 0)" }),
+                                            stroke: null }),
+                                      $(go.TextBlock,  // the label text
+                                        { textAlign: "center",
+                                            font: "10pt helvetica, arial, sans-serif",
+                                            stroke: "#555555",
+                                            margin: 4 },
+                                        new go.Binding("text", "rate")))
                                   ),
                     initialContentAlignment: go.Spot.Center,
                     "ModelChanged": updateAngular,
                     "ChangedSelection": updateSelection,
-                    "undoManager.isEnabled": true
+                    "undoManager.isEnabled": true,
+                    layout: $(ContinuousForceDirectedLayout,  // automatically spread nodes apart while dragging
+            { defaultSpringLength: 30, defaultElectricalCharge: 100 })
                   });
               // whenever a GoJS transaction has finished modifying the model, update all Angular bindings
               function updateAngular(e) {
