@@ -207,6 +207,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\JasmineController.cs" />
     <Compile Include="Models\AcademicPaper.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -242,6 +243,8 @@
     <Content Include="Areas\Admin\js\login\login.controller.js" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\jasmine\jasmine.css" />
+    <Content Include="Content\jasmine\jasmine_favicon.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -251,6 +254,7 @@
     <Content Include="js\fdiagram.js" />
     <Content Include="js\Home\index.controller.js" />
     <Content Include="js\Home\result.controller.js" />
+    <Content Include="Test\spec\controllers\index.controller.spec.js" />
     <Content Include="Scripts\angular-animate.js" />
     <Content Include="Scripts\angular-animate.min.js" />
     <Content Include="Scripts\angular-aria.js" />
@@ -309,7 +313,7 @@
     <Content Include="Areas\Admin\Views\Relations\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Relations\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Users\Login.cshtml" />
-    <Content Include="js\Home\deneme.controller.js" />
+    <None Include=".bin\node.cmd" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\i18n\angular-locale_af-na.js" />
     <Content Include="Scripts\i18n\angular-locale_af-za.js" />
@@ -1049,6 +1053,14 @@
     <Content Include="Scripts\i18n\angular-locale_zh.js" />
     <Content Include="Scripts\i18n\angular-locale_zu-za.js" />
     <Content Include="Scripts\i18n\angular-locale_zu.js" />
+    <Content Include="Scripts\jasmine-samples\Player.js" />
+    <Content Include="Scripts\jasmine-samples\PlayerSpec.js" />
+    <Content Include="Scripts\jasmine-samples\Song.js" />
+    <Content Include="Scripts\jasmine-samples\SpecHelper.js" />
+    <Content Include="Scripts\jasmine\boot.js" />
+    <Content Include="Scripts\jasmine\console.js" />
+    <Content Include="Scripts\jasmine\jasmine-html.js" />
+    <Content Include="Scripts\jasmine\jasmine.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -1060,6 +1072,7 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Test\spec\DataService.spec.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -1093,8 +1106,8 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Scripts\version.json" />
-    <Content Include="Views\Home\Deneme.cshtml" />
     <Content Include="Views\Home\Result.cshtml" />
+    <Content Include="Views\Jasmine\SpecRunner.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

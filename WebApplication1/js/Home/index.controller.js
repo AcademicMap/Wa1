@@ -12,7 +12,7 @@
         $scope.title = 'controller';
 
         $scope.name = "";
-        $scope.plist = {};
+        $scope.plist = null;
         $scope.isResult = " ";
 
         $scope.search = function(input){
@@ -34,12 +34,15 @@
             $window.location.href = "http://" + $window.location.host + "/Home/Result/" + input;
         }
 
-        activate();
+        
 
-        function activate() {
+        $scope.activate = function () {
             DataService.getPapers().then(function (response) {
                 $scope.plist = response.Value;
             })
         }
+
+        $scope.activate();
+
     }
 })();
